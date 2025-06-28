@@ -1,3 +1,4 @@
+import { prisma } from '@infra/clients/prismaClient';
 import { env } from '@shared/env/env';
 
 import { app } from './app';
@@ -12,4 +13,12 @@ async function main() {
     process.exit(1);
   }
 }
-main();
+main()
+  .then(async () => {
+    await prisma.$disconnect();
+  })
+  .catch(async (e) => {
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+  });
