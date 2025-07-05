@@ -10,7 +10,8 @@
     "paths": {
       "@main/*": ["src/main/*"],
       "@shared/*": ["src/shared/*"],
-      "@infra/*": ["src/infra/*"]
+      "@infra/*": ["src/infra/*"],
+      "@kermel/*": ["src/kermel/*"]
     },
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
