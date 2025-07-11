@@ -1,16 +1,12 @@
 import 'reflect-metadata';
 
 import { ErrorCode } from '@application/errors/ErrorCode';
-import { JWTService } from '@application/services/JWTService';
-import { GoogleOAuthUseCase } from '@application/useCases/GoogleOAuthUseCase';
 import { fastifyCors } from '@fastify/cors';
 import fastifyJWT from '@fastify/jwt';
-import fastifyPassport from '@fastify/passport';
-import { Registry } from '@kermel/di/Registry';
 import { env } from '@shared/env/env';
 import { accountRoutes } from '@web/routes/accountRoutes';
+import { authTestRoutes } from '@web/routes/authTestRoutes';
 import { fastify } from 'fastify';
-import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { ZodError } from 'zod';
 
 export const app = fastify();
@@ -26,52 +22,6 @@ app.register(fastifyCors, {
   credentials: true,
 });
 
-// Register Passport
-app.register(fastifyPassport.initialize());
-
-// Configuração do Google OAuth Strategy
-fastifyPassport.use(
-  'google',
-  new GoogleStrategy(
-    {
-      clientID: env.GOOGLE_CLIENT_ID,
-      clientSecret: env.GOOGLE_CLIENT_SECRET,
-      callbackURL: env.GOOGLE_CALLBACK_URL,
-    },
-    async (accessToken, refreshToken, profile, done) => {
-      try {
-        // Validação dos dados do Google
-        const email = profile.emails?.[0]?.value;
-        const name = profile.displayName;
-        const avatar = profile.photos?.[0]?.value;
-
-        if (!email || !name) {
-          return done(new Error('Missing required profile information'), undefined);
-        }
-
-        // Usa o UseCase para processar o login
-        const registry = Registry.getInstance();
-        const googleOAuthUseCase = registry.resolve(GoogleOAuthUseCase);
-
-        const result = await googleOAuthUseCase.execute({
-          googleId: profile.id,
-          email,
-          name,
-          avatar,
-        });
-
-        done(null, result.account);
-      } catch (error) {
-        done(error as Error, undefined);
-      }
-    },
-  ),
-);
-
-// Serialize/Deserialize user for session
-fastifyPassport.registerUserSerializer(async (user: any) => user.id);
-fastifyPassport.registerUserDeserializer(async (id: string) => ({ id }));
-
 // Health check route
 app.get('/health', () => {
   return { status: 'ok' };
@@ -82,50 +32,22 @@ app.register(accountRoutes, {
   prefix: '/accounts',
 });
 
-// Google OAuth routes
-app.get(
-  '/auth/google',
-  {
-    preValidation: fastifyPassport.authenticate('google', {
-      scope: ['profile', 'email'],
-    }),
-  },
-  async () => {
-    // This will never be called as it redirects to Google
-  },
-);
+// Register test routes (for development and testing)
+app.register(authTestRoutes, {
+  prefix: '/test',
+});
 
-app.get(
-  '/auth/google/callback',
-  {
-    preValidation: fastifyPassport.authenticate('google', {
-      failureRedirect: `${env.FRONTEND_URL}/login?error=oauth_failed`,
-    }),
-  },
-  async (req, reply) => {
-    try {
-      const user = req.user as any;
+// Simplified Google OAuth redirect (for testing purposes)
+app.get('/auth/google', async (req, reply) => {
+  const googleAuthUrl =
+    `https://accounts.google.com/oauth2/auth?` +
+    `client_id=${env.GOOGLE_CLIENT_ID}&` +
+    `redirect_uri=${encodeURIComponent(env.GOOGLE_CALLBACK_URL)}&` +
+    `response_type=code&` +
+    `scope=profile email`;
 
-      if (!user) {
-        return reply.redirect(`${env.FRONTEND_URL}/login?error=no_user`);
-      }
-
-      // Generate JWT token
-      const jwtService = Registry.getInstance().resolve(JWTService);
-      const token = await jwtService.generateToken({
-        accountId: user.id,
-        email: user.email,
-        role: user.role,
-      });
-
-      // Redirect to frontend with token
-      reply.redirect(`${env.FRONTEND_URL}/auth/callback?token=${token}&new=${user.isNew || false}`);
-    } catch (error) {
-      console.error('OAuth callback error:', error);
-      reply.redirect(`${env.FRONTEND_URL}/login?error=callback_failed`);
-    }
-  },
-);
+  reply.redirect(googleAuthUrl);
+});
 
 // Profile route (protected)
 app.get('/profile', async (req, reply) => {

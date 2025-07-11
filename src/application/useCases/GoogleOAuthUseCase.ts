@@ -1,10 +1,10 @@
-import { IAccountRepository } from '@application/contracts/repositories/IAccountRepository';
 import { Account } from '@application/entities/Account';
+import { AccountRepository } from '@infra/database/prisma/repositories/AccountRepository';
 import { Injectable } from '@kermel/decorators/Injectable';
 
 @Injectable()
 export class GoogleOAuthUseCase {
-  constructor(private readonly accountRepository: IAccountRepository) {}
+  constructor(private readonly accountRepository: AccountRepository) {}
 
   async execute(data: GoogleOAuthUseCase.Input): Promise<GoogleOAuthUseCase.Output> {
     const { googleId, email, name, avatar } = data;

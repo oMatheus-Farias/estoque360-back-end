@@ -47,6 +47,7 @@ export namespace Account {
   export type Attributes = {
     email: string;
     password?: string | null;
+    googleId?: string | null;
     role?: Account.Role;
     status?: boolean;
     id?: string;
@@ -57,6 +58,7 @@ export namespace Account {
   export type CreateData = {
     email: string;
     password?: string | null;
+    googleId?: string | null;
     role?: Account.Role;
   };
 
