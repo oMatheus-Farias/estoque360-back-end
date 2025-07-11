@@ -11,7 +11,7 @@ datasource db {
 model Account {
   id        String   @id
   email     String   @unique @db.VarChar(255)
-  password  String
+  password  String?
   googleId  String?  @unique @map("google_id")
   role      Role     @default(COLLABORATOR)
   status    Boolean  @default(true)
