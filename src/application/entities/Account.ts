@@ -12,7 +12,7 @@ export class Account {
   constructor(attr: Account.Attributes) {
     this.id = attr.id ?? KSUID.randomSync().string;
     this.email = attr.email;
-    this.password = attr.password;
+    this.password = attr.password ?? '';
     this.role = attr.role ?? Account.Role.COLLABORATOR;
     this.status = attr.status ?? true;
     this.createdAt = attr.createdAt ?? new Date();
@@ -22,7 +22,7 @@ export class Account {
   static create(data: Account.CreateData): Account {
     return new Account({
       email: data.email,
-      password: data.password,
+      password: data?.password,
       role: data.role,
     });
   }
@@ -46,7 +46,7 @@ export class Account {
 export namespace Account {
   export type Attributes = {
     email: string;
-    password: string;
+    password?: string | null;
     role?: Account.Role;
     status?: boolean;
     id?: string;
@@ -56,7 +56,7 @@ export namespace Account {
 
   export type CreateData = {
     email: string;
-    password: string;
+    password?: string | null;
     role?: Account.Role;
   };
 
