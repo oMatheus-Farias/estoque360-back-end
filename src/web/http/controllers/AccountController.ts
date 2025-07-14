@@ -1,4 +1,4 @@
-import { CreateAccountUseCase } from '@application/useCases/CreateAccountUseCase';
+import { CreateAccountUseCase } from '@application/useCases/sessions/CreateAccountUseCase';
 import { Controller } from '@domain/contracts/Controller';
 import { Injectable } from '@kermel/decorators/Injectable';
 import { Schema } from '@kermel/decorators/Schema';

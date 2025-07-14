@@ -1,3 +1,4 @@
+import { PasswordHasherAdapter } from '@application/adapters/PasswordHasherAdapter';
 import { Account } from '@application/entities/Account';
 import { Profile } from '@application/entities/Profile';
 import { EmailAlreadyInUse } from '@application/errors/application/EmailAlreadyInUse';
@@ -6,21 +7,22 @@ import { Injectable } from '@kermel/decorators/Injectable';
 
 @Injectable()
 export class CreateAccountUseCase {
-  constructor(private readonly accountRepository: AccountRepository) {}
+  constructor(
+    private readonly accountRepository: AccountRepository,
+    private readonly passwordHasherAdapter: PasswordHasherAdapter,
+  ) {}
 
   async execute(data: CreateAccountUseCase.Input): Promise<CreateAccountUseCase.Output> {
     const { name, email, password, role, phone, avatar } = data;
 
-    // Verifica se o email já existe
     const existingAccount = await this.accountRepository.findByEmail(email);
+
     if (existingAccount) {
       throw new EmailAlreadyInUse('Email already exists');
     }
 
-    // Hash da senha (implementar bcrypt depois)
-    const hashedPassword = await this.hashPassword(password);
+    const hashedPassword = await this.passwordHasherAdapter.hash(password);
 
-    // Cria as entidades
     const account = Account.create({
       email,
       password: hashedPassword,
@@ -34,10 +36,8 @@ export class CreateAccountUseCase {
       avatar,
     });
 
-    // ✅ Agora o repositório cuida da transação
     await this.accountRepository.createWithProfile(account, profile);
 
-    // Retorna dados seguros (sem senha)
     return {
       account: {
         id: account.id,
@@ -46,12 +46,6 @@ export class CreateAccountUseCase {
         id: profile.id,
       },
     };
-  }
-
-  private async hashPassword(password: string): Promise<string> {
-    // Implementar hash da senha (bcrypt, argon2, etc.)
-    // Por enquanto retorna a senha como está
-    return password;
   }
 }
 

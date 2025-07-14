@@ -1,5 +1,5 @@
 import { JWTService } from '@application/services/JWTService';
-import { GoogleOAuthUseCase } from '@application/useCases/GoogleOAuthUseCase';
+import { GoogleOAuthUseCase } from '@application/useCases/sessions/GoogleOAuthUseCase';
 import { Injectable } from '@kermel/decorators/Injectable';
 import { FastifyReply, FastifyRequest } from 'fastify';
 

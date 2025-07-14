@@ -49,22 +49,6 @@ app.get('/auth/google', async (req, reply) => {
   reply.redirect(googleAuthUrl);
 });
 
-// Profile route (protected)
-app.get('/profile', async (req, reply) => {
-  try {
-    await req.jwtVerify();
-    const user = req.user as { accountId: string; email: string; role: string };
-
-    reply.send({
-      id: user.accountId,
-      email: user.email,
-      role: user.role,
-    });
-  } catch {
-    reply.code(401).send({ error: 'Unauthorized' });
-  }
-});
-
 // Error handler
 app.setErrorHandler((error, req, reply) => {
   if (error instanceof ZodError) {
