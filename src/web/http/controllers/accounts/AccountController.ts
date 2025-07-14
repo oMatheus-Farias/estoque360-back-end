@@ -1,9 +1,9 @@
-import { CreateAccountUseCase } from '@application/useCases/sessions/CreateAccountUseCase';
+import { CreateAccountUseCase } from '@application/useCases/accounts/CreateAccountUseCase';
 import { Controller } from '@domain/contracts/Controller';
 import { Injectable } from '@kermel/decorators/Injectable';
 import { Schema } from '@kermel/decorators/Schema';
 
-import { CreateAccountBody, CreateAccountSchema } from '../validators/schemas/CreateAccountSchema';
+import { CreateAccountBody, CreateAccountSchema } from '../../validators/schemas/CreateAccountSchema';
 
 @Injectable()
 @Schema(CreateAccountSchema)
@@ -33,5 +33,12 @@ export class CreateAccountController extends Controller<CreateAccountController.
 }
 
 export namespace CreateAccountController {
-  export type Response = CreateAccountUseCase.Output;
+  export type Response = {
+    account: {
+      id: string;
+    };
+    profile: {
+      id: string;
+    };
+  };
 }

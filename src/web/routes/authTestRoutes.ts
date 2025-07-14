@@ -1,5 +1,5 @@
 import { Registry } from '@kermel/di/Registry';
-import { AuthTestController } from '@web/http/controllers/AuthTestController';
+import { AuthTestController } from '@web/http/controllers/accounts/AuthTestController';
 import { FastifyInstance } from 'fastify';
 
 export async function authTestRoutes(app: FastifyInstance) {

@@ -1,4 +1,4 @@
-import { IPasswordHasher } from '@domain/contracts/adapters/IPasswordHasher';
+import type { IPasswordHasher } from '@domain/contracts/adapters/IPasswordHasher';
 import { Injectable } from '@kermel/decorators/Injectable';
 import { hash } from 'bcryptjs';
 

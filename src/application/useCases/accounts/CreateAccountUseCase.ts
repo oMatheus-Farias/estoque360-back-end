@@ -1,7 +1,7 @@
 import { PasswordHasherAdapter } from '@application/adapters/PasswordHasherAdapter';
 import { Account } from '@application/entities/Account';
 import { Profile } from '@application/entities/Profile';
-import { EmailAlreadyInUse } from '@application/errors/application/EmailAlreadyInUse';
+import { CredentialsError } from '@application/errors/application/CredentialsError';
 import { AccountRepository } from '@infra/database/prisma/repositories/AccountRepository';
 import { Injectable } from '@kermel/decorators/Injectable';
 
@@ -18,7 +18,7 @@ export class CreateAccountUseCase {
     const existingAccount = await this.accountRepository.findByEmail(email);
 
     if (existingAccount) {
-      throw new EmailAlreadyInUse('Email already exists');
+      throw new CredentialsError('Email already exists');
     }
 
     const hashedPassword = await this.passwordHasherAdapter.hash(password);
