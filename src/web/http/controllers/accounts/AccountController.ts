@@ -3,7 +3,7 @@ import { Controller } from '@domain/contracts/Controller';
 import { Injectable } from '@kermel/decorators/Injectable';
 import { Schema } from '@kermel/decorators/Schema';
 
-import { CreateAccountBody, CreateAccountSchema } from '../../validators/schemas/CreateAccountSchema';
+import { CreateAccountBody, CreateAccountSchema } from '../../validators/schemas/accounts/CreateAccountSchema';
 
 @Injectable()
 @Schema(CreateAccountSchema)

@@ -14,21 +14,21 @@ export class CreateRefreshTokenUseCase {
   ) {}
 
   async execute(data: CreateRefreshTokenUseCase.Input): Promise<CreateRefreshTokenUseCase.Output> {
-    const { id } = data;
+    const { refreshToken } = data;
 
-    const refreshToken = await this.refreshTokenRepository.findById({ id });
+    const _refreshToken = await this.refreshTokenRepository.findById({ id: refreshToken });
 
-    if (!refreshToken) {
+    if (!_refreshToken) {
       throw new NotFoundError('Refresh token not found');
     }
 
-    if (Date.now() > refreshToken.expiresAt.getTime()) {
-      await this.refreshTokenRepository.deleteAll({ accountId: refreshToken.accountId });
+    if (Date.now() > _refreshToken.expiresAt.getTime()) {
+      await this.refreshTokenRepository.deleteAll({ accountId: _refreshToken.accountId });
       throw new CredentialsError('Refresh token expired.');
     }
-    await this.refreshTokenRepository.deleteAll({ accountId: refreshToken.accountId });
+    await this.refreshTokenRepository.deleteAll({ accountId: _refreshToken.accountId });
 
-    const account = await this.accountRepository.findById(refreshToken.accountId);
+    const account = await this.accountRepository.findById(_refreshToken.accountId);
 
     if (!account) {
       throw new NotFoundError('Account not found');
@@ -54,7 +54,7 @@ export class CreateRefreshTokenUseCase {
 
 export namespace CreateRefreshTokenUseCase {
   export type Input = {
-    id: string;
+    refreshToken: string;
   };
 
   export type Output = {
