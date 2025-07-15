@@ -22,11 +22,14 @@ export class CreateRefreshTokenController extends Controller<CreateRefreshTokenC
       refreshToken: request.body.refreshToken,
     });
 
-    const token = await this.jwtService.generateToken({
-      accountId: account.id,
-      email: account.email,
-      role: account.role,
-    });
+    const token = await this.jwtService.generateToken(
+      {
+        accountId: account.id,
+        email: account.email,
+        role: account.role,
+      },
+      '1d',
+    );
 
     return {
       statusCode: 201,

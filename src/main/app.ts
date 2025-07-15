@@ -7,6 +7,7 @@ import { env } from '@shared/env/env';
 import { accountRoutes } from '@web/routes/accountRoutes';
 import { authTestRoutes } from '@web/routes/authTestRoutes';
 import { refreshTokenRoutes } from '@web/routes/refreshTokenRoutes';
+import { sessionRoutes } from '@web/routes/sessionRoutes';
 import { fastify } from 'fastify';
 import { ZodError } from 'zod';
 
@@ -26,6 +27,9 @@ app.get('/health', () => {
 });
 app.register(authTestRoutes, {
   prefix: '/test',
+});
+app.register(sessionRoutes, {
+  prefix: '/sessions',
 });
 app.register(accountRoutes, {
   prefix: '/accounts',
