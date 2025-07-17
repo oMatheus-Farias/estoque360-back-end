@@ -2,7 +2,7 @@ import { PasswordCompareAdapter } from '@application/adapters/PasswordCompareAda
 import { RefreshToken } from '@application/entities/RefreshToken';
 import { CredentialsError } from '@application/errors/application/CredentialsError';
 import { AccountRepository } from '@infra/database/prisma/repositories/AccountRepository';
-import { RefreshTokensRepository } from '@infra/database/prisma/repositories/RefreshTokenRepository';
+import { RefreshTokenRepository } from '@infra/database/prisma/repositories/RefreshTokenRepository';
 import { Injectable } from '@kermel/decorators/Injectable';
 import { EXP_TIME_IN_HOURS } from '@shared/constants/expTimeInHours';
 
@@ -10,7 +10,7 @@ import { EXP_TIME_IN_HOURS } from '@shared/constants/expTimeInHours';
 export class CredentialsAuthUseCase {
   constructor(
     private readonly accountRepository: AccountRepository,
-    private readonly refreshTokenRepository: RefreshTokensRepository,
+    private readonly refreshTokenRepository: RefreshTokenRepository,
     private readonly passwordCompareAdapter: PasswordCompareAdapter,
   ) {}
 

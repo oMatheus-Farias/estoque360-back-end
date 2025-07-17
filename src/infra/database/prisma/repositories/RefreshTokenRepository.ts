@@ -4,7 +4,7 @@ import { prisma } from '@infra/clients/prismaClient';
 import { Injectable } from '@kermel/decorators/Injectable';
 
 @Injectable()
-export class RefreshTokensRepository implements IRefreshTokenRepository {
+export class RefreshTokenRepository implements IRefreshTokenRepository {
   async findById(data: Pick<RefreshToken, 'id'>): Promise<RefreshToken | null> {
     const refreshToken = await prisma.refreshToken.findUnique({
       where: { id: data.id },

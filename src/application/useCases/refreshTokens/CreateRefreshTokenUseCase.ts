@@ -2,14 +2,14 @@ import { RefreshToken } from '@application/entities/RefreshToken';
 import { CredentialsError } from '@application/errors/application/CredentialsError';
 import { NotFoundError } from '@application/errors/application/NotFoundError';
 import { AccountRepository } from '@infra/database/prisma/repositories/AccountRepository';
-import { RefreshTokensRepository } from '@infra/database/prisma/repositories/RefreshTokenRepository';
+import { RefreshTokenRepository } from '@infra/database/prisma/repositories/RefreshTokenRepository';
 import { Injectable } from '@kermel/decorators/Injectable';
 import { EXP_TIME_IN_HOURS } from '@shared/constants/expTimeInHours';
 
 @Injectable()
 export class CreateRefreshTokenUseCase {
   constructor(
-    private readonly refreshTokenRepository: RefreshTokensRepository,
+    private readonly refreshTokenRepository: RefreshTokenRepository,
     private readonly accountRepository: AccountRepository,
   ) {}
 
