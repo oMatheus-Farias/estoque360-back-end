@@ -1,3 +1,4 @@
+import { FastifyJWT } from '@fastify/jwt';
 import { getSchema } from '@kermel/decorators/Schema';
 
 export abstract class Controller<TBody = undefined> {
@@ -34,7 +35,7 @@ export namespace Controller {
     params: TParams;
     query: TQuery;
     headers: THeaders;
-  };
+  } & FastifyJWT;
 
   export type Response<TBody = undefined> = {
     statusCode: number;

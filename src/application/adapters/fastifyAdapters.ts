@@ -13,6 +13,8 @@ export function fastifyAdapter<TBody = any>(controller: Controller<TBody>) {
         params: (request.params ?? {}) as Record<string, unknown>,
         query: (request.query ?? {}) as Record<string, unknown>,
         headers: (request.headers ?? {}) as Record<string, unknown>,
+        user: request.user || { accountId: '', email: '', role: '' },
+        payload: request.user || { accountId: '', email: '', role: '' },
       };
 
       const response = await controller.execute(controllerRequest);
