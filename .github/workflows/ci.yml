@@ -19,6 +19,7 @@ jobs:
       GOOGLE_CLIENT_ID: '123'
       GOOGLE_CLIENT_SECRET: '123'
       GOOGLE_CALLBACK_URL: 'http://localhost:3001/auth/google/callback'
+      PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING: 1
 
     steps:
     - name: Checkout code
@@ -29,6 +30,16 @@ jobs:
       with:
         node-version: '22.x'
         cache: 'npm'
+
+    - name: Cache Prisma binaries
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cache/prisma
+          node_modules/.prisma
+        key: ${{ runner.os }}-prisma-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-prisma-
 
     - name: Delete script prepare
       run: npm pkg delete scripts.prepare
