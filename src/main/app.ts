@@ -6,6 +6,7 @@ import { fastifyJwt } from '@fastify/jwt';
 import { env } from '@shared/env/env';
 import { accountRoutes } from '@web/routes/accountRoutes';
 import { authTestRoutes } from '@web/routes/authTestRoutes';
+import { companyRoutes } from '@web/routes/companyRoutes';
 import { refreshTokenRoutes } from '@web/routes/refreshTokenRoutes';
 import { sessionRoutes } from '@web/routes/sessionRoutes';
 import { fastify } from 'fastify';
@@ -36,6 +37,9 @@ app.register(accountRoutes, {
 });
 app.register(refreshTokenRoutes, {
   prefix: '/refresh-tokens',
+});
+app.register(companyRoutes, {
+  prefix: '/companies',
 });
 
 // Simplified Google OAuth redirect (for testing purposes)
