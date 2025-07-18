@@ -3,12 +3,13 @@ import { Profile } from '@application/entities/Profile';
 import { IAccountRepository } from '@domain/contracts/repositories/IAccountRepository';
 import { prisma } from '@infra/clients/prismaClient';
 import { Injectable } from '@kermel/decorators/Injectable';
+import { Prisma } from '@prisma/client';
 import { randomUUID } from 'crypto';
 
 @Injectable()
 export class AccountRepository implements IAccountRepository {
   async createWithProfile(account: Account, profile: Profile): Promise<void> {
-    await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       // Cria a conta
       await tx.account.create({
         data: {
@@ -74,7 +75,7 @@ export class AccountRepository implements IAccountRepository {
   }
 
   async createGoogleAccount(googleData: { email: string; googleId: string; name: string; avatar?: string }): Promise<Account> {
-    const result = await prisma.$transaction(async (tx) => {
+    const result = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const account = await tx.account.create({
         data: {
           id: randomUUID(),

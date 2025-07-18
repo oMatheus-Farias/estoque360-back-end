@@ -28,7 +28,7 @@ export class RefreshTokenRepository implements IRefreshTokenRepository {
     if (refreshTokens.length === 0) return [];
 
     return refreshTokens.map(
-      (token) =>
+      (token: any) =>
         new RefreshToken({
           id: token.id,
           accountId: token.accountId,

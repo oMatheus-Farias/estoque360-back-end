@@ -1,4 +1,4 @@
-import type { $Enums } from 'generated/prisma';
+import { $Enums } from 'generated/prisma/client';
 
 export type CreateAccountWithProfileInput = {
   email: string;

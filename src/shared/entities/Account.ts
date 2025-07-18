@@ -1,4 +1,4 @@
-import type { Role } from 'generated/prisma';
+import { Role } from 'generated/prisma';
 
 export type Account = {
   id: string;
