@@ -78,14 +78,15 @@ export class CompanyRepository implements ICompanyRepository {
     });
   }
 
-  async update(id: string, data: Company): Promise<void> {
-    await prisma.company.update({
+  async update(id: string, data: Partial<Pick<Company, 'name' | 'phone' | 'status'>>): Promise<{ id: string }> {
+    return await prisma.company.update({
       where: { id },
       data: {
-        name: data.name,
-        phone: data.phone,
-        status: data.status,
+        ...(data.name !== undefined && { name: data.name }),
+        ...(data.phone !== undefined && { phone: data.phone }),
+        ...(data.status !== undefined && { status: data.status }),
       },
+      select: { id: true },
     });
   }
 }

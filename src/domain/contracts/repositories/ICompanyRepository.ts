@@ -5,5 +5,5 @@ export abstract class ICompanyRepository {
   abstract findByEmail(email: string): Promise<Company | null>;
   abstract findByCNPJ(cnpj: string): Promise<Company | null>;
   abstract create(data: Company): Promise<{ id: string }>;
-  abstract update(id: string, data: Company): Promise<void>;
+  abstract update(id: string, data: Partial<Pick<Company, 'name' | 'phone' | 'status'>>): Promise<{ id: string }>;
 }
