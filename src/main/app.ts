@@ -7,6 +7,7 @@ import { env } from '@shared/env/env';
 import { accountRoutes } from '@web/routes/accountRoutes';
 import { authTestRoutes } from '@web/routes/authTestRoutes';
 import { companyRoutes } from '@web/routes/companyRoutes';
+import { productRoutes } from '@web/routes/productRoutes';
 import { refreshTokenRoutes } from '@web/routes/refreshTokenRoutes';
 import { sessionRoutes } from '@web/routes/sessionRoutes';
 import { unitRoutes } from '@web/routes/unitRoutes';
@@ -44,6 +45,9 @@ app.register(companyRoutes, {
 });
 app.register(unitRoutes, {
   prefix: '/units',
+});
+app.register(productRoutes, {
+  prefix: '/products',
 });
 
 // Simplified Google OAuth redirect (for testing purposes)
