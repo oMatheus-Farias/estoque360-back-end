@@ -1,4 +1,4 @@
-import { Profile } from '@application/entities/Profile';
+import type { Profile } from '@application/entities/Profile';
 import { Injectable } from '@kermel/decorators/Injectable';
 
 @Injectable()

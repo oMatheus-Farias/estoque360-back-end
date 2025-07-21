@@ -1,5 +1,5 @@
-import { Account } from '@application/entities/Account';
-import { Profile } from '@application/entities/Profile';
+import type { Account } from '@application/entities/Account';
+import type { Profile } from '@application/entities/Profile';
 import { Injectable } from '@kermel/decorators/Injectable';
 
 @Injectable()

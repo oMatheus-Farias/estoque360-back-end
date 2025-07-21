@@ -1,4 +1,4 @@
-import { RefreshToken } from '@application/entities/RefreshToken';
+import type { RefreshToken } from '@application/entities/RefreshToken';
 import { Injectable } from '@kermel/decorators/Injectable';
 
 @Injectable()

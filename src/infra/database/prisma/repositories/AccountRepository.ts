@@ -1,6 +1,6 @@
 import { Account } from '@application/entities/Account';
 import { Profile } from '@application/entities/Profile';
-import { IAccountRepository } from '@domain/contracts/repositories/IAccountRepository';
+import type { IAccountRepository } from '@domain/contracts/repositories/IAccountRepository';
 import { prisma } from '@infra/clients/prismaClient';
 import { Injectable } from '@kermel/decorators/Injectable';
 import { randomUUID } from 'crypto';

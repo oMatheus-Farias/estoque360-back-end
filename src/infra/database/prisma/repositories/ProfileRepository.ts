@@ -1,5 +1,5 @@
 import { Profile } from '@application/entities/Profile';
-import { IProfileRepository } from '@domain/contracts/repositories/IProfileRepository';
+import type { IProfileRepository } from '@domain/contracts/repositories/IProfileRepository';
 import { prisma } from '@infra/clients/prismaClient';
 import { Injectable } from '@kermel/decorators/Injectable';
 
