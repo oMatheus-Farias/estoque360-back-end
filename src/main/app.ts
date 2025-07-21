@@ -9,6 +9,7 @@ import { authTestRoutes } from '@web/routes/authTestRoutes';
 import { companyRoutes } from '@web/routes/companyRoutes';
 import { refreshTokenRoutes } from '@web/routes/refreshTokenRoutes';
 import { sessionRoutes } from '@web/routes/sessionRoutes';
+import { unitRoutes } from '@web/routes/unitRoutes';
 import { fastify } from 'fastify';
 import { ZodError } from 'zod';
 
@@ -40,6 +41,9 @@ app.register(refreshTokenRoutes, {
 });
 app.register(companyRoutes, {
   prefix: '/companies',
+});
+app.register(unitRoutes, {
+  prefix: '/units',
 });
 
 // Simplified Google OAuth redirect (for testing purposes)
