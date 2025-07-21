@@ -49,7 +49,8 @@ export const UpdateUnitSchema = z.object({
       message: 'Phone is optional',
     })
     .max(15, 'Phone must be at most 15 characters long')
-    .optional(),
+    .optional()
+    .transform((val) => (val === '' ? null : val)),
   status: z
     .boolean({
       required_error: 'Status is optional',

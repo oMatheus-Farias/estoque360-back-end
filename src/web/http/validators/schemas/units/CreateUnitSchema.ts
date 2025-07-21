@@ -46,7 +46,9 @@ export const CreateUnitSchema = z.object({
       message: 'Phone is optional',
     })
     .max(15, 'Phone must be at most 15 characters long')
-    .optional(),
+    .optional()
+    .nullable()
+    .transform((val) => (val === '' ? null : val)),
 });
 
 export type CreateUnitBody = z.infer<typeof CreateUnitSchema>;
