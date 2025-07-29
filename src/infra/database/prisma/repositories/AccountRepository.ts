@@ -127,4 +127,11 @@ export class AccountRepository implements IAccountRepository {
       updatedAt: account.updatedAt,
     });
   }
+
+  async updateGoogleId(accountId: string, googleId: string): Promise<void> {
+    await prisma.account.update({
+      where: { id: accountId },
+      data: { googleId },
+    });
+  }
 }

@@ -50,18 +50,6 @@ app.register(productRoutes, {
   prefix: '/products',
 });
 
-// Simplified Google OAuth redirect (for testing purposes)
-app.get('/auth/google', async (req, reply) => {
-  const googleAuthUrl =
-    `https://accounts.google.com/oauth2/auth?` +
-    `client_id=${env.GOOGLE_CLIENT_ID}&` +
-    `redirect_uri=${encodeURIComponent(env.GOOGLE_CALLBACK_URL)}&` +
-    `response_type=code&` +
-    `scope=profile email`;
-
-  reply.redirect(googleAuthUrl);
-});
-
 app.setErrorHandler((error, req, reply) => {
   if (error instanceof ZodError) {
     return reply.status(400).send({
