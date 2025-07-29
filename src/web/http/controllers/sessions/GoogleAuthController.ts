@@ -5,14 +5,17 @@ import { env } from '@shared/env/env';
 @Injectable()
 export class GoogleAuthController extends Controller<GoogleAuthController.Response> {
   protected override async handle(): Promise<Controller.Response<GoogleAuthController.Response>> {
-    const googleAuthUrl =
-      `https://accounts.google.com/oauth2/auth?` +
-      `client_id=${env.GOOGLE_CLIENT_ID}&` +
-      `redirect_uri=${encodeURIComponent(env.GOOGLE_CALLBACK_URL)}&` +
-      `response_type=code&` +
-      `scope=profile email&` +
-      `access_type=offline&` +
-      `prompt=consent`;
+    // Usar URLSearchParams para encoding correto
+    const params = new URLSearchParams({
+      client_id: env.GOOGLE_CLIENT_ID,
+      redirect_uri: env.GOOGLE_CALLBACK_URL,
+      response_type: 'code',
+      scope: 'profile email',
+      access_type: 'offline',
+      prompt: 'consent',
+    });
+
+    const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
 
     return {
       statusCode: 200,
