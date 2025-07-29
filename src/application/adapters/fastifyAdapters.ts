@@ -20,6 +20,12 @@ export function fastifyAdapter<TBody = any>(controller: Controller<TBody>) {
       const response = await controller.execute(controllerRequest);
 
       reply.status(response.statusCode);
+
+      // Tratar redirecionamentos
+      if (response.statusCode === 302 && response.body && typeof response.body === 'object' && 'redirectUrl' in response.body) {
+        return reply.redirect(response.body.redirectUrl as string);
+      }
+
       return reply.send(response.body);
     } catch (error) {
       if (env.NODE_ENV !== 'production') {
