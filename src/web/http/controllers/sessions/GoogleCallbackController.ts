@@ -15,13 +15,16 @@ export class GoogleCallbackController extends Controller<GoogleCallbackControlle
       throw new Error('Authorization code is required');
     }
 
-    const result = await this.googleCallbackUseCase.execute({
+    const { token, refreshToken } = await this.googleCallbackUseCase.execute({
       code,
     });
 
     return {
       statusCode: 200,
-      body: result,
+      body: {
+        token,
+        refreshToken,
+      },
     };
   }
 }
@@ -29,11 +32,6 @@ export class GoogleCallbackController extends Controller<GoogleCallbackControlle
 export namespace GoogleCallbackController {
   export type Response = {
     token: string;
-    account: {
-      id: string;
-      email: string;
-      role: string;
-      isNew: boolean;
-    };
+    refreshToken: string;
   };
 }

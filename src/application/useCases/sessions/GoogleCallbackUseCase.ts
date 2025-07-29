@@ -1,15 +1,19 @@
 import { Account } from '@application/entities/Account';
 import { Profile } from '@application/entities/Profile';
+import { RefreshToken } from '@application/entities/RefreshToken';
 import { NotFoundError } from '@application/errors/application/NotFoundError';
 import { JWTService } from '@application/services/JWTService';
 import { AccountRepository } from '@infra/database/prisma/repositories/AccountRepository';
+import { RefreshTokenRepository } from '@infra/database/prisma/repositories/RefreshTokenRepository';
 import { Injectable } from '@kermel/decorators/Injectable';
+import { EXP_TIME_IN_HOURS } from '@shared/constants/expTimeInHours';
 import { env } from '@shared/env/env';
 
 @Injectable()
 export class GoogleCallbackUseCase {
   constructor(
     private readonly accountRepository: AccountRepository,
+    private readonly refreshTokenRepository: RefreshTokenRepository,
     private readonly jwtService: JWTService,
   ) {}
 
@@ -33,14 +37,11 @@ export class GoogleCallbackUseCase {
         role: account.role,
       });
 
+      const refreshToken = await this.createRefreshToken(account.id);
+
       return {
         token,
-        account: {
-          id: account.id,
-          email: account.email,
-          role: account.role,
-          isNew: false,
-        },
+        refreshToken,
       };
     }
 
@@ -57,14 +58,11 @@ export class GoogleCallbackUseCase {
         role: existingAccount.role,
       });
 
+      const refreshToken = await this.createRefreshToken(existingAccount.id);
+
       return {
         token,
-        account: {
-          id: existingAccount.id,
-          email: existingAccount.email,
-          role: existingAccount.role,
-          isNew: false,
-        },
+        refreshToken,
       };
     }
 
@@ -90,15 +88,25 @@ export class GoogleCallbackUseCase {
       role: newAccount.role,
     });
 
+    const refreshToken = await this.createRefreshToken(newAccount.id);
+
     return {
       token,
-      account: {
-        id: newAccount.id,
-        email: newAccount.email,
-        role: newAccount.role,
-        isNew: true,
-      },
+      refreshToken,
     };
+  }
+
+  private async createRefreshToken(accountId: string): Promise<string> {
+    const expiresAt = new Date();
+    expiresAt.setHours(expiresAt.getHours() + EXP_TIME_IN_HOURS);
+
+    const refreshTokenEntity = RefreshToken.create({
+      accountId,
+      expiresAt,
+    });
+
+    const { id: refreshTokenId } = await this.refreshTokenRepository.create(refreshTokenEntity);
+    return refreshTokenId;
   }
 
   private async exchangeCodeForToken(code: string): Promise<GoogleTokenResponse> {
@@ -164,11 +172,6 @@ export namespace GoogleCallbackUseCase {
 
   export type Output = {
     token: string;
-    account: {
-      id: string;
-      email: string;
-      role: string;
-      isNew: boolean;
-    };
+    refreshToken: string;
   };
 }
