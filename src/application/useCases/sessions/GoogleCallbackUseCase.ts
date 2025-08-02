@@ -47,10 +47,9 @@ export class GoogleCallbackUseCase {
 
     // 4. Verificar se já existe conta com o mesmo email
     const existingAccount = await this.accountRepository.findByEmail(googleUser.email);
-
     if (existingAccount) {
-      // Vincular Google ID à conta existente
-      await this.accountRepository.updateGoogleId(existingAccount.id, googleUser.id);
+      // Vincular Google ID à conta existente e atualizar avatar se necessário
+      await this.accountRepository.updateGoogleIdAndAvatar(existingAccount.id, googleUser.id, googleUser.picture, googleUser.name);
 
       const token = await this.jwtService.generateToken({
         accountId: existingAccount.id,

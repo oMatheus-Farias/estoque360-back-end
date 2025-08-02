@@ -9,4 +9,6 @@ export abstract class IAccountRepository {
   abstract findByGoogleId(googleId: string): Promise<Account | null>;
   abstract createWithProfile(account: Account, profile: Profile): Promise<void>;
   abstract createGoogleAccount(googleData: { email: string; googleId: string; name: string; avatar?: string }): Promise<Account>;
+  abstract updateGoogleId(accountId: string, googleId: string): Promise<void>;
+  abstract updateGoogleIdAndAvatar(accountId: string, googleId: string, avatar: string, name?: string): Promise<void>;
 }

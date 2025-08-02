@@ -134,4 +134,40 @@ export class AccountRepository implements IAccountRepository {
       data: { googleId },
     });
   }
+
+  async updateGoogleIdAndAvatar(accountId: string, googleId: string, avatar: string, name?: string): Promise<void> {
+    await prisma.$transaction(async (tx) => {
+      // Atualizar Google ID na conta
+      await tx.account.update({
+        where: { id: accountId },
+        data: { googleId },
+      });
+
+      // Buscar o perfil existente
+      const existingProfile = await tx.profile.findUnique({
+        where: { accountId },
+      });
+
+      if (existingProfile) {
+        const updateData: any = {};
+
+        // Sempre atualizar avatar com dados do Google (avatar do Google é sempre confiável)
+        if (avatar && avatar.trim() !== '') {
+          updateData.avatar = avatar;
+        }
+
+        // Atualizar nome se fornecido e perfil não tiver nome
+        if (name && (!existingProfile.name || existingProfile.name.trim() === '')) {
+          updateData.name = name;
+        }
+
+        if (Object.keys(updateData).length > 0) {
+          await tx.profile.update({
+            where: { accountId },
+            data: updateData,
+          });
+        }
+      }
+    });
+  }
 }
