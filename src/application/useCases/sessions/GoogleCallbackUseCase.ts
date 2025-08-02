@@ -1,5 +1,3 @@
-import { Account } from '@application/entities/Account';
-import { Profile } from '@application/entities/Profile';
 import { RefreshToken } from '@application/entities/RefreshToken';
 import { NotFoundError } from '@application/errors/application/NotFoundError';
 import { JWTService } from '@application/services/JWTService';
@@ -65,33 +63,10 @@ export class GoogleCallbackUseCase {
       };
     }
 
-    // 5. Criar nova conta
-    const newAccount = Account.create({
-      email: googleUser.email,
-      password: null, // OAuth não precisa de senha
-      role: Account.Role.COLLABORATOR,
-      googleId: googleUser.id,
-    });
-
-    const newProfile = Profile.create({
-      accountId: newAccount.id,
-      name: googleUser.name,
-      avatar: googleUser.picture,
-    });
-
-    await this.accountRepository.createWithProfile(newAccount, newProfile);
-
-    const token = await this.jwtService.generateToken({
-      accountId: newAccount.id,
-      email: newAccount.email,
-      role: newAccount.role,
-    });
-
-    const refreshToken = await this.createRefreshToken(newAccount.id);
-
+    // 5. Se não existe conta, redirecionar para registro
     return {
-      token,
-      refreshToken,
+      shouldRedirect: true,
+      redirectTo: 'register',
     };
   }
 
@@ -169,8 +144,13 @@ export namespace GoogleCallbackUseCase {
     code: string;
   };
 
-  export type Output = {
-    token: string;
-    refreshToken: string;
-  };
+  export type Output =
+    | {
+        token: string;
+        refreshToken: string;
+      }
+    | {
+        shouldRedirect: true;
+        redirectTo: 'register';
+      };
 }

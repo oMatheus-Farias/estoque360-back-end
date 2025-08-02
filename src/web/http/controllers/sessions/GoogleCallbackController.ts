@@ -16,10 +16,23 @@ export class GoogleCallbackController extends Controller<GoogleCallbackControlle
       throw new Error('Authorization code is required');
     }
 
-    const { token, refreshToken } = await this.googleCallbackUseCase.execute({ code });
+    const result = await this.googleCallbackUseCase.execute({ code });
 
-    // Retornar dados de redirecionamento para o frontend
-    const redirectUrl = `${env.FRONTEND_URL}/auth/google/callback?token=${token}&refreshToken=${refreshToken}`;
+    // Verificar se deve redirecionar para registro
+    if ('shouldRedirect' in result) {
+      //TODO: Implementar lógica de redirecionamento para registro
+      const redirectUrl = `${env.FRONTEND_URL}/auth/sign-in`;
+
+      return {
+        statusCode: 302,
+        body: {
+          redirectUrl,
+        },
+      };
+    }
+
+    // Login bem-sucedido - redirecionar com tokens
+    const redirectUrl = `${env.FRONTEND_URL}/auth/google/callback?token=${result.token}&refreshToken=${result.refreshToken}`;
 
     return {
       statusCode: 302,
